@@ -75,6 +75,7 @@ class Mapper {
             mimeType: t.mimeType,
             quality: t.quality
         })) || [];
+        const trackAuthorization = data.getJSON('track_authorization') || null;
         const result = {
             type: 'track',
             id,
@@ -85,6 +86,7 @@ class Mapper {
             playableState,
             duration: data.durations.playback,
             transcodings,
+            trackAuthorization,
             user: user ? await this.mapUser(user) : null
         };
         return result;

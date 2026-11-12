@@ -84,6 +84,7 @@ export default class Mapper {
       mimeType: t.mimeType,
       quality: t.quality
     })) || [];
+    const trackAuthorization = data.getJSON<string>('track_authorization') || null;
 
     const result: TrackEntity = {
       type: 'track',
@@ -95,6 +96,7 @@ export default class Mapper {
       playableState,
       duration: data.durations.playback,
       transcodings,
+      trackAuthorization,
       user: user ? await this.mapUser(user) : null
     };
 

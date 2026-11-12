@@ -14,6 +14,7 @@ interface TrackEntity {
         mimeType?: string | null;
         quality?: string | null;
     }[];
+    trackAuthorization?: string | null;
     user: UserEntity | null;
 }
 export default TrackEntity;

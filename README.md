@@ -24,6 +24,9 @@ If you come across an album that you like, consider purchasing it to support the
 
 ### Changelog
 
+1.0.4
+- Fix playback after SoundCloud stopped serving progressive MP3 / MP3 HLS: prefer AAC HLS (`audio/mp4`) streams and pass `track_authorization` when resolving stream URLs
+
 1.0.3
 - Fix longer tracks cutting off early at 30-40 minutes into playback
 

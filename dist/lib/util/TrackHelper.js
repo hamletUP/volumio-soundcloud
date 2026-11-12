@@ -37,7 +37,11 @@ class TrackHelper {
          */
         let preferred;
         if (isLongStream) {
-            const format = longStreamFormat === PluginConfig_1.LongStreamFormat.Opus ? ['ogg', 'mpeg'] : ['mpeg', 'ogg'];
+            /**
+             * AAC ('audio/mp4') HLS is what SoundCloud now serves. Legacy entries
+             * such as 'audio/mpegurl' still show up but return 404 when resolved.
+             */
+            const format = longStreamFormat === PluginConfig_1.LongStreamFormat.Opus ? ['mp4', 'ogg', 'mpeg'] : ['mp4', 'mpeg', 'ogg'];
             preferred = [
                 { protocol: 'hls', format, quality: 'sq' },
                 /**
@@ -52,8 +56,12 @@ class TrackHelper {
                 //{ protocol: 'progressive', format: [ 'mp4' ], quality: 'hq' },
                 //{ protocol: 'hls', format: [ 'mp4' ], quality: 'hq' },
                 { protocol: 'progressive', format: ['mpeg'], quality: 'sq' },
-                // Despite having higher bitrates, 'hls' + 'mpeg' streams have seeking problems. So 'ogg' preferred.
-                { protocol: 'hls', format: ['ogg', 'mpeg'], quality: 'sq' }
+                /**
+                 * AAC ('audio/mp4') HLS first: SoundCloud has removed progressive MP3 and is
+                 * phasing out MP3 / Opus HLS. Legacy 'audio/mpegurl' entries return 404.
+                 * Despite having higher bitrates, 'hls' + 'mpeg' streams have seeking problems. So 'ogg' preferred over 'mpeg'.
+                 */
+                { protocol: 'hls', format: ['mp4', 'ogg', 'mpeg'], quality: 'sq' }
             ];
         }
         while (transcodingUrl === null && preferred.length > 0) {

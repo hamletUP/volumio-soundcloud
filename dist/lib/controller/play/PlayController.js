@@ -82,7 +82,13 @@ class PlayController {
         if (!transcodingUrl) {
             throw Error('No transcoding found');
         }
-        let streamingUrl = await model.getStreamingUrl(transcodingUrl);
+        let resolveUrl = transcodingUrl;
+        if (trackData.trackAuthorization) {
+            const u = new URL(resolveUrl);
+            u.searchParams.set('track_authorization', trackData.trackAuthorization);
+            resolveUrl = u.toString();
+        }
+        let streamingUrl = await model.getStreamingUrl(resolveUrl);
         if (!streamingUrl) {
             throw Error('No stream found');
         }
@@ -98,6 +104,12 @@ class PlayController {
         else if (streamingUrl.includes('.64.opus')) { // 64 kbps opus
             track.samplerate = '64 kbps';
             streamingUrl += '&_vt=.opus';
+        }
+        else if (streamingUrl.includes('/aac_160k/')) { // 160 kbps AAC (HLS)
+            track.samplerate = '160 kbps';
+        }
+        else if (streamingUrl.includes('/aac_96k/')) { // 96 kbps AAC (HLS)
+            track.samplerate = '96 kbps';
         }
         const safeUri = streamingUrl.replace(/"/g, '\\"');
         await __classPrivateFieldGet(this, _PlayController_instances, "m", _PlayController_doPlay).call(this, safeUri, track);
